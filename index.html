@@ -1,421 +1,601 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Método Mariñas - Reiniciá tu Mente</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            scroll-behavior: smooth;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Método Mariñas — Reiniciá tu Mente</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{
+    --graphite: #191b19;
+    --graphite-2: #22251f;
+    --stone: #e9ebe4;
+    --stone-2: #dfe2d8;
+    --ink: #191b19;
+    --bone: #edefe8;
+    --rust: #c14a1e;
+    --rust-dim: #8f3a1a;
+    --teal: #2f6e62;
+    --teal-bright: #4a9384;
+    --line: rgba(237,239,232,0.14);
+    --line-dark: rgba(25,27,25,0.12);
+    --display: 'Big Shoulders Display', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
 
-        .text-naranja { color: #FF6B35; }
-        .bg-naranja { background-color: #FF6B35; }
-        .border-naranja { border-color: #FF6B35; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    background:var(--stone);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 32px;}
+  section{position:relative;}
 
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 400px;
-        }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    opacity:0.72;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:18px;height:1px;
+    background:currentColor;
+    opacity:0.6;
+  }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
+  h1,h2,h3{
+    font-family:var(--display);
+    font-weight:800;
+    letter-spacing:-0.01em;
+    line-height:0.98;
+  }
 
-        .glass-card:hover {
-            border-color: #FF6B35;
-            background: rgba(255, 255, 255, 0.05);
-        }
+  .btn{
+    font-family:var(--mono);
+    font-size:13.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:16px 26px;
+    border-radius:2px;
+    border:1px solid transparent;
+    transition:transform 0.25s ease, background 0.25s ease, border-color .25s ease;
+  }
+  .btn-solid{
+    background:var(--rust);
+    color:var(--bone);
+  }
+  .btn-solid:hover{background:var(--rust-dim); transform:translateY(-2px);}
+  .btn-outline{
+    border-color:var(--line-dark);
+    color:var(--ink);
+  }
+  .btn-outline:hover{border-color:var(--ink); transform:translateY(-2px);}
+  .on-dark .btn-outline{border-color:var(--line); color:var(--bone);}
+  .on-dark .btn-outline:hover{border-color:var(--bone);}
+  .btn-arrow{transition:transform .25s ease;}
+  .btn:hover .btn-arrow{transform:translateX(3px);}
 
-        .nav-link {
-            position: relative;
-            transition: color 0.3s ease;
-        }
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(233,235,228,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  nav.wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:74px;
+  }
+  .wordmark{
+    font-family:var(--display);
+    font-weight:800;
+    font-size:22px;
+    letter-spacing:-0.01em;
+  }
+  .navlinks{display:flex; align-items:center; gap:34px;}
+  .navlinks a{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.06em;
+    text-transform:uppercase; opacity:0.75;
+  }
+  .navlinks a:hover{opacity:1;}
+  @media(max-width:800px){ .navlinks a.hide-mobile{display:none;} }
 
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #FF6B35;
-            transition: width 0.3s ease;
-        }
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--graphite); color:var(--bone);
+    padding:88px 0 40px;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px; align-items:center;
+  }
+  @media(max-width:900px){ .hero-grid{grid-template-columns:1fr;} }
+  .hero h1{
+    font-size:clamp(42px, 6vw, 76px);
+    margin:20px 0 24px;
+  }
+  .hero .accent{color:var(--rust);}
+  .hero p.lede{
+    font-size:18px; max-width:46ch; opacity:0.82; margin-bottom:34px;
+  }
+  .hero .ctas{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:18px;}
+  .hero .microcopy{
+    font-family:var(--mono); font-size:12.5px; opacity:0.55; letter-spacing:0.03em;
+  }
 
-        .nav-link:hover::after {
-            width: 100%;
-        }
+  .pulse-wrap{position:relative;}
+  .pulse-label{
+    position:absolute; font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+    text-transform:uppercase; opacity:0.6;
+  }
+  .pulse-label.l1{top:8px; left:2%;}
+  .pulse-label.l2{bottom:4px; right:2%; color:var(--teal-bright); opacity:0.9;}
 
-        .btn-animate {
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+  #hero3d{width:100%; aspect-ratio:1/1; max-height:460px;}
+  #hero3d canvas{width:100% !important; height:100% !important; display:block;}
+  #groundline{width:100%; height:auto; overflow:visible;}
+  .jagged-path{
+    fill:none; stroke:var(--rust); stroke-width:2.5;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .calm-path{
+    fill:none; stroke:var(--teal-bright); stroke-width:2.5;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .draw{
+    stroke-dasharray:1400;
+    stroke-dashoffset:1400;
+    animation:draw 2.6s cubic-bezier(.4,.1,.2,1) forwards;
+  }
+  @keyframes draw{ to{stroke-dashoffset:0;} }
+  .pulse-dot{
+    fill:var(--teal-bright);
+    opacity:0;
+    animation:travel 3.4s linear 2.6s infinite;
+  }
+  @keyframes travel{
+    0%{opacity:0;}
+    2%{opacity:1;}
+    96%{opacity:1;}
+    100%{opacity:0;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .draw{animation:none; stroke-dashoffset:0;}
+    .pulse-dot{animation:none; opacity:0;}
+  }
 
-        .btn-animate:hover {
-            transform: scale(1.05);
-        }
+  /* section divider - the "steady line" motif, recurring after the hero's chaos */
+  .divider{
+    display:flex; align-items:center; gap:14px;
+    padding:30px 0;
+  }
+  .divider .l{flex:1; height:1px; background:var(--line-dark);}
+  .on-dark .divider .l{background:var(--line);}
+  .divider .d{width:6px; height:6px; border-radius:50%; background:var(--teal);}
 
-        /* Máscara para la foto de Traje/Charla (elimina bordes del iPhone) */
-        .crop-screenshot-suit {
-            position: relative;
-            overflow: hidden;
-        }
+  /* ---------- reveal on scroll ---------- */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
 
-        .crop-screenshot-suit img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Escalamos para remover la barra superior de OS, la hora y los botones inferiores de borrar/compartir */
-            transform: scale(1.28);
-            transform-origin: center 46%;
-        }
+  /* ---------- PROBLEM SECTION ---------- */
+  .problem{padding:96px 0;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head h2{font-size:clamp(30px,4vw,46px); margin-top:16px;}
 
-        /* Máscara para la foto de Espaldas entrenando (elimina timeline de video, controles e interfaz) */
-        .crop-screenshot-back {
-            position: relative;
-            overflow: hidden;
-        }
+  .symptoms{display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:1px solid var(--line-dark);}
+  @media(max-width:800px){.symptoms{grid-template-columns:1fr;}}
+  .symptom{
+    padding:30px 26px 30px 0; border-bottom:1px solid var(--line-dark);
+    border-right:1px solid var(--line-dark);
+  }
+  .symptom:nth-child(3){border-right:none;}
+  @media(max-width:800px){ .symptom{border-right:none;} }
+  .symptom .tag{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--rust); margin-bottom:14px; display:block;
+  }
+  .symptom h3{font-family:var(--body); font-weight:600; font-size:19px; margin-bottom:10px;}
+  .symptom p{font-size:15px; opacity:0.75;}
 
-        .crop-screenshot-back img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Zoom para limpiar la barra de reproducción de video inferior, el control 1x y la hora de arriba */
-            transform: scale(1.24);
-            transform-origin: center 45%;
-        }
-    </style>
+  /* ---------- METHOD SECTION ---------- */
+  .method{background:var(--graphite); color:var(--bone); padding:100px 0;}
+  .method .section-head p{opacity:0.75; font-size:17px; max-width:56ch; margin-top:14px;}
+
+  .pillars{display:flex; flex-direction:column; margin-top:20px;}
+  .pillar{
+    display:grid; grid-template-columns:280px 1fr; gap:40px;
+    padding:38px 0; border-top:1px solid var(--line);
+  }
+  .pillar:last-child{border-bottom:1px solid var(--line);}
+  @media(max-width:760px){ .pillar{grid-template-columns:1fr; gap:12px;} }
+  .pillar .tag{font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase; opacity:0.55;}
+  .pillar h3{font-family:var(--body); font-weight:700; font-size:23px; margin-top:8px;}
+  .pillar p{opacity:0.78; font-size:15.5px; max-width:60ch;}
+
+  /* ---------- FOUNDER SECTION ---------- */
+  .founder{padding:100px 0;}
+  .founder-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:start;}
+  @media(max-width:860px){.founder-grid{grid-template-columns:1fr;}}
+  .founder h2{font-size:clamp(28px,3.6vw,40px); margin-bottom:22px;}
+  .founder p{font-size:16.5px; margin-bottom:16px; opacity:0.85; max-width:52ch;}
+  .founder .callout{
+    border-left:2px solid var(--teal); padding:6px 0 6px 20px; font-size:15.5px; opacity:0.9; margin-top:18px;
+  }
+
+  /* ---------- MODALITIES ---------- */
+  .modalities{padding:0 0 100px;}
+  .mod-grid{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-dark); border:1px solid var(--line-dark);}
+  @media(max-width:760px){.mod-grid{grid-template-columns:1fr;}}
+  .mod-card{background:var(--stone); padding:44px 40px;}
+  .mod-card .tag{font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:0.1em; color:var(--teal); }
+  .mod-card h3{font-size:30px; margin:14px 0 20px;}
+  .mod-card ul{list-style:none;}
+  .mod-card li{
+    font-size:15px; padding:10px 0; border-top:1px solid var(--line-dark); opacity:0.85;
+  }
+  .mod-card li:first-of-type{border-top:none;}
+  .mod-card .btn{margin-top:26px;}
+
+  /* ---------- ABOUT ---------- */
+  .about{background:var(--graphite); color:var(--bone); padding:100px 0;}
+  .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:center;}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr;}}
+  .about-photo{
+    aspect-ratio:4/5; overflow:hidden; filter:grayscale(0.25) contrast(1.05);
+    border:1px solid var(--line);
+  }
+  .about-photo img{width:100%;height:100%;object-fit:cover;}
+  .about h2{font-size:clamp(28px,3.6vw,40px); margin-bottom:20px;}
+  .about p{font-size:16.5px; opacity:0.82; margin-bottom:16px; max-width:56ch;}
+  .about .sign{font-family:var(--mono); font-size:13px; opacity:0.6; margin-top:20px;}
+
+  /* ---------- FAQ ---------- */
+  .faq{padding:100px 0;}
+  .faq-item{border-top:1px solid var(--line-dark); padding:26px 0;}
+  .faq-item:last-child{border-bottom:1px solid var(--line-dark);}
+  .faq-q{font-family:var(--body); font-weight:700; font-size:18px; margin-bottom:8px;}
+  .faq-q span{color:var(--rust); font-family:var(--mono); font-weight:400; margin-right:10px;}
+  .faq-a{font-size:15.5px; opacity:0.78; max-width:64ch;}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{background:var(--graphite); color:var(--bone); padding:120px 0 100px; text-align:left;}
+  .final h2{font-size:clamp(34px,5vw,58px); max-width:14ch; margin-bottom:24px;}
+  .final p{font-size:17px; opacity:0.78; max-width:52ch; margin-bottom:34px;}
+
+  footer{
+    background:var(--graphite); color:var(--bone); opacity:0.6;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.04em;
+    padding:26px 0; border-top:1px solid var(--line);
+  }
+
+  :focus-visible{outline:2px solid var(--teal-bright); outline-offset:3px;}
+</style>
 </head>
 <body>
-    <!-- Navegación -->
-    <nav class="fixed w-full z-50 bg-[#121212]/80 backdrop-blur-md border-b border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-xl font-extrabold tracking-tighter italic text-naranja">MÉTODO MARIÑAS</span>
-                </div>
-                <div class="hidden md:flex space-x-8">
-                    <a href="#inicio" class="nav-link text-sm font-medium">Inicio</a>
-                    <a href="#empatia" class="nav-link text-sm font-medium">¿Te pasa esto?</a>
-                    <a href="#metodo" class="nav-link text-sm font-medium">El Método</a>
-                    <a href="#modalidades" class="nav-link text-sm font-medium">Modalidades</a>
-                </div>
-                <div>
-                    <a href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20coordinar%20mi%20entrevista%20gratuita%20para%20el%20M%C3%A9todo%20Mari%C3%B1as." class="bg-naranja text-white px-4 py-2 rounded-full text-sm font-bold btn-animate">¡Quiero empezar!</a>
-                </div>
-            </div>
-        </div>
-    </nav>
 
-    <!-- 1. HERO SECTION (ARRIBA: Camisa de Frente) -->
-    <section id="inicio" class="relative pt-32 pb-20 overflow-hidden min-h-screen flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="text-left">
-                    <span class="text-naranja font-bold tracking-widest uppercase text-sm mb-4 block">MÁS QUE ENTRENAR TU CUERPO, REINICIÁ TU MENTE</span>
-                    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-                        Usá la fuerza como un botón de <span class="text-naranja">reset</span> para ganarle a la ansiedad.
-                    </h1>
-                    <p class="text-lg text-gray-400 mb-8 max-w-lg">
-                        Un método diseñado para profesionales y trabajadores, cansados de vivir sin energía y con la cabeza a mil. Recuperá el control con el Método Mariñas.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20coordinar%20mi%20entrevista%20gratuita%20para%20el%20M%C3%A9todo%20Mari%C3%B1as." class="bg-naranja text-center text-white px-8 py-4 rounded-xl font-bold text-lg btn-animate shadow-lg shadow-orange-900/20">
-                            👉 Entrevista gratuita por WhatsApp
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Tu Retrato amigable de frente con el micrófono arriba de todo -->
-                <div class="relative">
-                    <div class="aspect-square rounded-3xl bg-gradient-to-tr from-naranja/20 to-transparent absolute -inset-4 blur-2xl"></div>
-                    <div class="relative bg-zinc-800 rounded-3xl overflow-hidden border border-white/10 aspect-[4/5] flex items-center justify-center">
-                        <img src="WhatsApp Image 2026-07-09 at 12.23.02 PM.jpeg" alt="Jonathan Mariñas - Método Mariñas" class="w-full h-full object-cover object-center" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="hidden absolute inset-0 flex flex-col items-center justify-center p-8 text-center text-gray-500">
-                            <span class="text-4xl mb-4">🏋️‍♂️</span>
-                            <span class="text-sm font-semibold text-white">Jonathan Mariñas</span>
-                            <span class="text-xs text-gray-400 mt-2">[Frente Close-up]</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<header>
+  <nav class="wrap">
+    <div class="wordmark">MÉTODO MARIÑAS</div>
+    <div class="navlinks">
+      <a href="#problema" class="hide-mobile">El problema</a>
+      <a href="#metodo" class="hide-mobile">El método</a>
+      <a href="#modalidades" class="hide-mobile">Modalidades</a>
+      <a href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20coordinar%20mi%20entrevista%20gratuita%20para%20el%20M%C3%A9todo%20Mari%C3%B1as.">Empezar →</a>
+    </div>
+  </nav>
+</header>
 
-    <!-- 2. SECCIÓN DE EMPATÍA -->
-    <section id="empatia" class="py-24 bg-zinc-900/50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">¿Sentís que la rutina te está pasando por arriba?</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">No es falta de voluntad, es falta de un método que entienda a tu cerebro.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-8 mb-16">
-                <div class="glass-card p-8 rounded-2xl">
-                    <div class="text-3xl mb-4">⏰</div>
-                    <h3 class="text-xl font-bold mb-2">Despertador enemigo</h3>
-                    <p class="text-gray-400">Te levantás cansado, arrastrando el cuerpo sin motivacion ni energia.</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl">
-                    <div class="text-3xl mb-4">🤯</div>
-                    <h3 class="text-xl font-bold mb-2">Cabeza a mil</h3>
-                    <p class="text-gray-400">Ruido mental constante y una fatiga que no te deja decidir con claridad las tareas simples.</p>
-                </div>
-                <div class="glass-card p-8 rounded-2xl">
-                    <div class="text-3xl mb-4">📉</div>
-                    <h3 class="text-xl font-bold mb-2">El lunes</h3>
-                    <p class="text-gray-400">Pagás el gimnasio, vas una semana y terminás abandonando por falta de energía.</p>
-                </div>
-            </div>
+<section class="hero on-dark">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Para profesionales con la cabeza a mil</span>
+      <h1>Menos ruido<br>en la cabeza,<br>más peso en la <span class="accent">barra.</span></h1>
+      <p class="lede">Un método pensado para bajar el cortisol, ordenar tu cabeza y recuperar la energía que el estrés te viene robando desde hace demasiado.</p>
+      <div class="ctas">
+        <a class="btn btn-solid" href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20coordinar%20mi%20entrevista%20gratuita%20para%20el%20M%C3%A9todo%20Mari%C3%B1as.">Entrevista gratuita <span class="btn-arrow">→</span></a>
+        <a class="btn btn-outline" href="#metodo">Ver el método</a>
+      </div>
+      <div class="microcopy">Sin rutinas genéricas. Sin gritos de sargento.</div>
+    </div>
+    <div class="pulse-wrap">
+      <span class="pulse-label l1">Peso real</span>
+      <span class="pulse-label l2">Calma real</span>
+      <div id="hero3d" aria-hidden="true"></div>
+      <svg id="groundline" viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" style="display:none;">
+        <path class="jagged-path draw" d="M0,110 L28,60 L46,150 L64,40 L82,140 L100,70 L118,130 L136,90 L154,150 L172,80" />
+        <path class="calm-path draw" d="M172,80 C210,150 240,20 280,110 C310,180 330,60 360,110 C400,150 430,80 480,110" />
+        <circle class="pulse-dot" r="4">
+          <animateMotion dur="3.4s" repeatCount="indefinite" begin="2.6s"
+            path="M172,80 C210,150 240,20 280,110 C310,180 330,60 360,110 C400,150 430,80 480,110" />
+        </circle>
+      </svg>
+    </div>
+  </div>
+</section>
 
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-zinc-800 p-8 rounded-3xl border border-white/5">
-                    <h4 class="text-center font-bold text-xl mb-8">El impacto en tu cuerpo (Estrés vs. Vitalidad)</h4>
-                    <div class="chart-container">
-                        <canvas id="stressChart"></canvas>
-                    </div>
-                    <p class="text-sm text-center text-gray-500 mt-6 italic">Visualización del impacto del entrenamiento de fuerza regulado vs. el sedentarismo estresante.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="problem" id="problema">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">¿Te pasa esto?</span>
+      <h2>No es falta de voluntad.<br>Es falta de método.</h2>
+    </div>
+    <div class="symptoms reveal">
+      <div class="symptom">
+        <span class="tag">Mañana</span>
+        <h3>El despertador enemigo</h3>
+        <p>Te levantás cansado, arrastrando el cuerpo, sin motivación ni energía para arrancar el día.</p>
+      </div>
+      <div class="symptom">
+        <span class="tag">Mente</span>
+        <h3>La cabeza a mil</h3>
+        <p>Ruido mental constante y una fatiga que no te deja decidir con claridad ni las tareas simples.</p>
+      </div>
+      <div class="symptom">
+        <span class="tag">Rutina</span>
+        <h3>El lunes de siempre</h3>
+        <p>Pagás el gimnasio, vas una semana, y terminás abandonando por falta de energía real.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- 3. LA SOLUCIÓN (MÉTODO) -->
-    <section id="metodo" class="py-24">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="grid md:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h2 class="text-3xl md:text-5xl font-extrabold mb-6 leading-tight">
-                        El entrenamiento de fuerza como <span class="text-naranja">tu cable a tierra</span>.
-                    </h2>
-                    <p class="text-gray-300 text-lg mb-8">
-                        No buscamos abdominales para la foto. Buscamos bajar el cortisol, liberar endorfinas y darle a tu cerebro la claridad y el enfoque que el estrés te quita.
-                    </p>
-                    
-                    <div class="space-y-4">
-                        <button onclick="updatePillar(0)" class="pillar-btn w-full text-left p-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all flex justify-between items-center bg-white/5 border-naranja">
-                            <span class="font-bold text-lg">Pilar 1: Fuerza Física Adaptada</span>
-                            <span class="text-naranja">→</span>
-                        </button>
-                        <button onclick="updatePillar(1)" class="pillar-btn w-full text-left p-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all flex justify-between items-center">
-                            <span class="font-bold text-lg">Pilar 2: Psicología del Hábito</span>
-                            <span class="text-naranja">→</span>
-                        </button>
-                        <button onclick="updatePillar(2)" class="pillar-btn w-full text-left p-4 rounded-xl border border-white/10 hover:bg-white/5 transition-all flex justify-between items-center">
-                            <span class="font-bold text-lg">Pilar 3: Seguimiento Humano</span>
-                            <span class="text-naranja">→</span>
-                        </button>
-                    </div>
-                </div>
+<section class="method on-dark" id="metodo">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">El método</span>
+      <h2>El entrenamiento de fuerza<br>como tu cable a tierra.</h2>
+      <p>No buscamos abdominales para la foto. Buscamos bajar el cortisol, liberar endorfinas, y darle a tu cerebro la claridad y el enfoque que el estrés le quita.</p>
+    </div>
+    <div class="pillars reveal">
+      <div class="pillar">
+        <div><span class="tag">Pilar — Cuerpo</span><h3>Fuerza Física Adaptada</h3></div>
+        <p>Entrenamos para que termines con más energía de la que tenías al empezar. Cuidamos tu postura de oficina y reforzamos tus zonas débiles: columna, hombros, cadera.</p>
+      </div>
+      <div class="pillar">
+        <div><span class="tag">Pilar — Conducta</span><h3>Psicología del Hábito</h3></div>
+        <p>No fallás por falta de fuerza de voluntad, fallás porque nadie te armó un sistema que se adapte a tu semana real. Trabajamos con micro-hábitos sostenibles para que entrenar deje de ser una obligación más.</p>
+      </div>
+      <div class="pillar">
+        <div><span class="tag">Pilar — Acompañamiento</span><h3>Seguimiento Humano</h3></div>
+        <p>Nada de apps genéricas ni rutinas en PDF que nadie revisa. Ajusto tu plan según cómo viene tu semana — laburo, sueño, estrés — y estoy para responderte cuando lo necesites.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-                <div id="pillar-content" class="bg-zinc-900 border border-white/10 p-10 rounded-3xl min-h-[400px] flex flex-col justify-center">
-                    <div class="text-naranja text-5xl mb-6" id="pillar-icon">🏋️‍♂️</div>
-                    <h3 class="text-2xl font-bold mb-4" id="pillar-title">Fuerza Física Adaptada</h3>
-                    <p class="text-gray-400 text-lg leading-relaxed" id="pillar-text">
-                        Diseñamos entrenamientos para que termines con más energía de la que tenías al empezar. Cuidamos tu postura de oficina y reforzamos tus zonas débiles como la columna y los hombros.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="founder">
+  <div class="wrap">
+    <div class="founder-grid reveal">
+      <div>
+        <span class="eyebrow">Por qué arrancar ahora</span>
+        <h2>Estoy armando los primeros grupos del Método Mariñas.</h2>
+      </div>
+      <div>
+        <p>Todavía no tengo casos de éxito para mostrarte, y prefiero decírtelo de frente antes que inventarte uno.</p>
+        <p>Lo que sí tengo es tiempo real para dedicarte: los cupos son limitados porque planifico cada programa a mano, no meto a treinta personas en la misma rutina.</p>
+        <p class="callout">Yo mismo entreno fuerza, movilidad y trabajo con frío todos los días. No te voy a pedir algo que no viva primero.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- 4. MODALIDADES -->
-    <section id="modalidades" class="py-24 bg-zinc-900/50">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-16">Elegí cómo querés transformar tu vida</h2>
-            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                <div class="glass-card p-10 rounded-3xl relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 bg-naranja text-white text-xs font-bold uppercase rounded-bl-xl">Local</div>
-                    <h3 class="text-2xl font-bold mb-4">Presencial</h3>
-                    <ul class="text-left space-y-4 text-gray-400 mb-8">
-                        <li class="flex items-start"><span class="text-naranja mr-2">✓</span> Técnica corregida en el momento.</li>
-                        <li class="flex items-start"><span class="text-naranja mr-2">✓</span> Clases personalizadas.</li>
-                        <li class="flex items-start"><span class="text-naranja mr-2">✓</span> Comunidad que está en la misma sintonía.</li>
-                    </ul>
-                    <a href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20consultar%20los%20horarios%20para%20el%20programa%20Presencial/H%C3%ADbrido." class="block w-full py-4 border border-naranja text-naranja font-bold rounded-xl group-hover:bg-naranja group-hover:text-white transition-all">Consultar horarios</a>
-                </div>
+<section class="modalities" id="modalidades">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Modalidades</span>
+      <h2>Elegí cómo transformar tu rutina.</h2>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="mod-grid reveal">
+      <div class="mod-card">
+        <span class="tag">Local</span>
+        <h3>Presencial</h3>
+        <ul>
+          <li>Técnica corregida en el momento.</li>
+          <li>Clases personalizadas, no genéricas.</li>
+          <li>Una comunidad que está en la misma sintonía.</li>
+        </ul>
+        <a class="btn btn-outline" href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20consultar%20los%20horarios%20para%20el%20programa%20Presencial.">Consultar horarios →</a>
+      </div>
+      <div class="mod-card">
+        <span class="tag">Global</span>
+        <h3>Online</h3>
+        <ul>
+          <li>Planificación adaptada a tu celular.</li>
+          <li>Revisión de tu postura en video.</li>
+          <li>Seguimiento diario, uno a uno, por WhatsApp.</li>
+        </ul>
+        <a class="btn btn-outline" href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20aplicar%20al%20programa%20100%25%20Online.">Aplicar al programa →</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-                <div class="glass-card p-10 rounded-3xl relative overflow-hidden group border-naranja bg-naranja/5">
-                    <div class="absolute top-0 right-0 p-4 bg-white text-black text-xs font-bold uppercase rounded-bl-xl">Global</div>
-                    <h3 class="text-2xl font-bold mb-4">Online</h3>
-                    <ul class="text-left space-y-4 text-gray-400 mb-8">
-                        <li class="flex items-start"><span class="text-naranja mr-2">✓</span> Planificación en tu celulars.</li>
-                        <li class="flex items-start"><span class="text-naranja mr-2">✓</span> Revisión de postura en video.</li>
-                        <li class="flex items-start"><span class="text-naranja mr-2">✓</span> Seguimiento diario uno a uno por WhatsApp.</li>
-                    </ul>
-                    <a href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20aplicar%20al%20programa%20100%25%20Online." class="block w-full py-4 bg-naranja text-white font-bold rounded-xl shadow-lg shadow-orange-900/30">Aplicar al programa</a>
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="about on-dark">
+  <div class="wrap about-grid">
+    <div class="about-photo reveal">
+      <img src="https://metodmarinas.github.io/Metodo-Marinas/WhatsApp%20Image%202026-07-09%20at%2012.23.02%20PM.jpeg" alt="Jonathan Mariñas">
+    </div>
+    <div class="reveal">
+      <span class="eyebrow">Sobre mí</span>
+      <h2>Hola, soy Joni. Y te entiendo perfectamente.</h2>
+      <p>Como profe de Educación Física y apasionado de la psicología, me cansé de ver cómo el fitness aleja a la gente común con exigencias exageradas y gritos de sargento.</p>
+      <p>Creo que el movimiento es una medicina indispensable para ordenar el descontrol diario de nuestras mentes. Mi misión es ayudarte a construir un hábito saludable, recuperar tu vida y crear una disciplina de la que te sientas orgulloso.</p>
+      <div class="sign">Sin juzgar. Con los pies en la tierra.</div>
+    </div>
+  </div>
+</section>
 
-    <!-- 5. SOBRE MÍ (ABAJO: Traje de frente + En cuero de espalda) -->
-    <section class="py-24">
-        <div class="max-w-5xl mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center gap-12">
-                <!-- Mostramos a Joni como un docente/coach que dicta cursos de salud integral -->
-                <div class="flex gap-4 flex-shrink-0 w-full md:w-auto justify-center">
-                    <!-- Foto de la charla principal, recortada elegantemente -->
-                    <div class="crop-screenshot-suit relative w-40 h-56 md:w-48 md:h-72 rounded-2xl border border-white/10 bg-zinc-800 shadow-2xl">
-                        <img src="WhatsApp Image 2026-07-09 at 12.30.56 PM (1).jpeg" alt="Jonathan Mariñas dictando clase de Salud Integral" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="hidden absolute inset-0 flex items-center justify-center text-xs text-gray-500 text-center p-4">[Jonathan dando clase]</div>
-                    </div>
-                    <!-- Foto de espalda, en cuero entrenando, recortada eliminando controles de iOS de manera sutilmente desfasada para dar dinamismo -->
-                    <div class="crop-screenshot-back relative w-40 h-56 md:w-48 md:h-72 rounded-2xl border-2 border-naranja bg-zinc-800 shadow-2xl mt-8">
-                        <img src="WhatsApp Image 2026-07-09 at 12.21.45 PM.jpeg" alt="Jonathan Mariñas - Entrenamiento de fuerza" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="hidden absolute inset-0 flex items-center justify-center text-xs text-gray-500 text-center p-4">[Jonathan de espalda]</div>
-                    </div>
-                </div>
-                <div>
-                    <h2 class="text-3xl font-bold mb-4">Hola, soy Joni Mariñas. Y te entiendo perfectamente.</h2>
-                    <p class="text-gray-400 text-lg mb-6 leading-relaxed">
-                        Como Profe de Educación Física y apasionado de la psicología, me cansé de ver cómo el fitness aleja a la gente común con exigencias exageradas y gritos de sargento. 
-                    </p>
-                    <p class="text-gray-400 text-lg mb-6 leading-relaxed">
-                        Creo que el movimiento es una medicina indispensable para ordenar el descontrol diario de nuestras mentes. Mi misión es ayudarte a construir un hábito saludable, a recuperar tu vida y a crear una disciplina de la cual te sientas sumamente orgulloso.
-                    </p>
-                    <p class="font-bold text-naranja text-xl">Sin juzgar y con los pies en la tierra.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<section class="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Antes de que preguntes</span>
+      <h2>Las dudas más comunes.</h2>
+    </div>
+    <div class="reveal">
+      <div class="faq-item">
+        <div class="faq-q"><span>01</span>"No tengo tiempo."</div>
+        <div class="faq-a">Las sesiones se adaptan a tu agenda real, no al revés. El plan se arma en base a lo que tenés, no a un horario ideal que no existe.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>02</span>"Nunca entrené / estoy fuera de forma."</div>
+        <div class="faq-a">El método está pensado justo para arrancar desde cero, sin exigencias de gimnasio ni comparaciones con nadie.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>03</span>"Ya probé y abandoné."</div>
+        <div class="faq-a">Por eso existe el pilar de seguimiento humano: la diferencia no es el ejercicio en sí, es que alguien te sostenga la constancia.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- 6. CIERRE / CTA -->
-    <section class="py-24 bg-gradient-to-b from-transparent to-naranja/10">
-        <div class="max-w-3xl mx-auto px-4 text-center">
-            <h2 class="text-4xl font-extrabold mb-6">¿Te sumás a recuperar tu energía?</h2>
-            <p class="text-gray-300 text-lg mb-10">
-                Para garantizar que cada planificación sea 100% a medida y con seguimiento diario, (los cupos mensuales son limitados). armo cada plan pensando en tu vida real.
-            </p>
-            <div class="glass-card p-8 rounded-3xl border-naranja/50 inline-block w-full">
-                <p class="text-xl mb-8 font-semibold">El primer paso es charlar y conocernos. No te cuesta nada.</p>
-                <a href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20coordinar%20mi%20entrevista%20gratuita%20para%20el%20M%C3%A9todo%20Mari%C3%B1as." class="bg-naranja text-white px-10 py-5 rounded-2xl font-extrabold text-xl btn-animate inline-block shadow-2xl shadow-orange-600/40">
-                    📲 Coordinar mi entrevista gratuita
-                </a>
-                <p class="mt-6 text-sm text-gray-500 italic">
-                    Hacés clic, me escribís directamente a mi WhatsApp y coordinamos un día y horario para charlar un rato sobre tu situación actual.
-                </p>
-            </div>
-        </div>
-    </section>
+<section class="final on-dark">
+  <div class="wrap">
+    <span class="eyebrow">Último paso</span>
+    <h2>¿Te sumás a recuperar tu energía?</h2>
+    <p>El primer paso es charlar y conocernos. Hacés clic, me escribís directamente por WhatsApp, y coordinamos un día y horario para hablar de tu situación actual. No te cuesta nada.</p>
+    <a class="btn btn-solid" href="https://wa.me/5491171091307?text=%C2%A1Hola%20Joni!%20Vengo%20de%20la%20web%20y%20quiero%20coordinar%20mi%20entrevista%20gratuita%20para%20el%20M%C3%A9todo%20Mari%C3%B1as.">Coordinar mi entrevista gratuita <span class="btn-arrow">→</span></a>
+  </div>
+</section>
 
-    <footer class="py-12 border-t border-white/5 text-center text-gray-600 text-sm">
-        <p>&copy; 2026 Método Mariñas - Entrenamiento con Propósito.</p>
-    </footer>
+<footer>
+  <div class="wrap">© 2026 Método Mariñas — Entrenamiento con propósito.</div>
+</footer>
 
-    <script>
-        // Lógica del Gráfico de Estrés vs Método
-        const ctx = document.getElementById('stressChart').getContext('2d');
-        const stressChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Nivel de Estrés', 'Energía Mental', 'Disciplina'],
-                datasets: [
-                    {
-                        label: 'Sin el Método',
-                        data: [90, 20, 15],
-                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        borderColor: 'rgba(255, 255, 255, 0.2)',
-                        borderWidth: 1,
-                        borderRadius: 8
-                    },
-                    {
-                        label: 'Con Método Mariñas',
-                        data: [35, 85, 90],
-                        backgroundColor: '#FF6B35',
-                        borderColor: '#FF6B35',
-                        borderWidth: 1,
-                        borderRadius: 8
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                        labels: { color: '#ffffff', font: { size: 12 } }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#666' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#fff' }
-                    }
-                }
-            }
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // ---- Hero 3D: mancuerna de hierro (fuerza) + anillos orbitando (calma) ----
+  (function initHero3D(){
+    const mount = document.getElementById('hero3d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!mount || typeof THREE === 'undefined') { showFallback(); return; }
+
+    let renderer;
+    try{
+      renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    }catch(e){ showFallback(); return; }
+
+    function showFallback(){
+      if(mount) mount.style.display='none';
+      const svg = document.getElementById('groundline');
+      if(svg) svg.style.display='block';
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 0.4, 7.5);
+
+    function size(){
+      const w = mount.clientWidth || 400;
+      const h = mount.clientHeight || 400;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    mount.appendChild(renderer.domElement);
+    size();
+    window.addEventListener('resize', size);
+
+    // lights
+    scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+    const key = new THREE.DirectionalLight(0xffffff, 1.1);
+    key.position.set(4, 5, 6);
+    scene.add(key);
+    const rim = new THREE.PointLight(0x4a9384, 2.2, 20);
+    rim.position.set(-4, -2, 3);
+    scene.add(rim);
+    const rustLight = new THREE.PointLight(0xc14a1e, 1.4, 20);
+    rustLight.position.set(3, -3, -2);
+    scene.add(rustLight);
+
+    // --- dumbbell (la fuerza) ---
+    const ironMat = new THREE.MeshStandardMaterial({ color:0x2a2c28, metalness:0.75, roughness:0.32 });
+    const grip = new THREE.MeshStandardMaterial({ color:0x3a3d37, metalness:0.4, roughness:0.55 });
+
+    const dumbbell = new THREE.Group();
+
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 3.4, 24), grip);
+    bar.rotation.z = Math.PI / 2;
+    dumbbell.add(bar);
+
+    function plateStack(xPos){
+      const stack = new THREE.Group();
+      const radii = [0.95, 0.78, 0.6];
+      const depths = [0.16, 0.14, 0.12];
+      let offset = 0;
+      radii.forEach((r, i)=>{
+        const plate = new THREE.Mesh(new THREE.CylinderGeometry(r, r, depths[i], 32), ironMat);
+        plate.rotation.z = Math.PI / 2;
+        plate.position.x = offset * (xPos < 0 ? 1 : -1);
+        stack.add(plate);
+        offset += depths[i] * 0.7;
+      });
+      stack.position.x = xPos;
+      return stack;
+    }
+    dumbbell.add(plateStack(-1.55));
+    dumbbell.add(plateStack(1.55));
+    dumbbell.rotation.x = 0.18;
+    scene.add(dumbbell);
+
+    // --- calm rings (la calma) ---
+    const ringGroup = new THREE.Group();
+    const ringDefs = [
+      { r: 2.5, tube: 0.012, color: 0x4a9384, tilt: [0.9, 0.3, 0] },
+      { r: 2.85, tube: 0.01,  color: 0x2f6e62, tilt: [1.3, -0.4, 0.5] },
+      { r: 3.15, tube: 0.008, color: 0x4a9384, tilt: [0.4, 1.1, -0.3] }
+    ];
+    const rings = ringDefs.map(def=>{
+      const geo = new THREE.TorusGeometry(def.r, def.tube, 16, 96);
+      const mat = new THREE.MeshBasicMaterial({ color: def.color, transparent:true, opacity:0.55 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.rotation.set(def.tilt[0], def.tilt[1], def.tilt[2]);
+      ringGroup.add(mesh);
+      return mesh;
+    });
+    scene.add(ringGroup);
+
+    let t = 0;
+    function animate(){
+      if(!reduceMotion){
+        t += 0.006;
+        dumbbell.rotation.y += 0.004;
+        rings.forEach((r, i)=>{
+          r.rotation.z += 0.0015 * (i % 2 === 0 ? 1 : -1);
+          r.rotation.x += 0.0009;
         });
+        ringGroup.position.y = Math.sin(t) * 0.08;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  })();
+</script>
 
-        // Lógica de los Pilares
-        const pillars = [
-            {
-                icon: '🏋️‍♂️',
-                title: 'Fuerza Física Adaptada',
-                text: 'entrenamientos para aumentar tu energía. No te vas a arrastrar por el piso; vas a fortalecer tu postura de oficina y blindar tus zonas débiles como espalda y cuello.'
-            },
-            {
-                icon: '🧠',
-                title: 'Psicología del Hábito',
-                text: 'Trabajamos en micro-hábitos para vencer la procrastinación. Te enseñamos a incorporar el movimiento para que entrenar sea tan natural en tu día como lavarte los dientes.'
-            },
-            {
-                icon: '📱',
-                title: 'Estructura y Seguimiento',
-                text: 'Tenés contacto directo conmigo por WhatsApp. Estoy ahí para ajustar tu plan si tuviste una semana difícil y darte un empujón cuando la rutina cuesta.'
-            }
-        ];
-
-        function updatePillar(index) {
-            const content = document.getElementById('pillar-content');
-            const icon = document.getElementById('pillar-icon');
-            const title = document.getElementById('pillar-title');
-            const text = document.getElementById('pillar-text');
-            const buttons = document.querySelectorAll('.pillar-btn');
-
-            // Animación simple de salida
-            content.style.opacity = '0';
-            content.style.transform = 'translateY(10px)';
-
-            setTimeout(() => {
-                icon.innerText = pillars[index].icon;
-                title.innerText = pillars[index].title;
-                text.innerText = pillars[index].text;
-                
-                content.style.opacity = '1';
-                content.style.transform = 'translateY(0)';
-            }, 200);
-
-            // Actualizar estilos de botones
-            buttons.forEach((btn, i) => {
-                if(i === index) {
-                    btn.classList.add('bg-white/5', 'border-naranja');
-                } else {
-                    btn.classList.remove('bg-white/5', 'border-naranja');
-                }
-            });
-        }
-    </script>
 </body>
 </html>
